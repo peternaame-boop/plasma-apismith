@@ -1,0 +1,18 @@
+{
+    "KPlugin": {
+        "Id": "com.peterduffy.apiusage",
+        "Name": "ApiSmith",
+        "Description": "Monitor usage across multiple API services",
+        "Icon": "network-server",
+        "Authors": [
+            {
+                "Name": "Peter Duffy"
+            }
+        ],
+        "Category": "System Information",
+        "License": "GPL-3.0-or-later",
+        "Version": "1.0.0"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0",
+    "KPackageStructure": "Plasma/Applet"
+}

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+    <kcfgfile name=""/>
+    <group name="General">
+        <entry name="refreshInterval" type="Int">
+            <default>5</default>
+        </entry>
+        <entry name="backendPort" type="Int">
+            <default>19853</default>
+        </entry>
+        <entry name="notificationsEnabled" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="warningThreshold" type="Int">
+            <default>75</default>
+        </entry>
+        <entry name="criticalThreshold" type="Int">
+            <default>90</default>
+        </entry>
+    </group>
+    <group name="Services">
+        <entry name="firecrawlEnabled" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="firecrawlApiKey" type="String">
+            <default></default>
+        </entry>
+        <entry name="firecrawlResetDay" type="Int">
+            <default>16</default>
+        </entry>
+        <entry name="serpApiEnabled" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="serpApiKey" type="String">
+            <default></default>
+        </entry>
+        <entry name="serpApiResetDay" type="Int">
+            <default>19</default>
+        </entry>
+        <entry name="claudeWorkEnabled" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="claudeWorkBrowser" type="String">
+            <default>chrome</default>
+        </entry>
+        <entry name="claudeWorkLabel" type="String">
+            <default>Work</default>
+        </entry>
+        <entry name="claudePrivateEnabled" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="claudePrivateBrowser" type="String">
+            <default>brave</default>
+        </entry>
+        <entry name="claudePrivateLabel" type="String">
+            <default>Private</default>
+        </entry>
+    </group>
+</kcfg>
