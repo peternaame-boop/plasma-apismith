@@ -297,6 +297,19 @@ GPL-3.0-or-later — see [LICENSE](LICENSE).
 
 ## Changelog
 
+### v1.1.0 (2026-02-13)
+
+**Security & reliability hardening**
+
+- Removed API keys from KConfig storage — Firecrawl and SerpAPI keys now retrieved exclusively from system keyring
+- Stripped API key text fields from config UI, replaced with "Stored securely via system keyring" labels
+- Backend strips `api_key` from config before persisting to disk
+- Added exception handler around SerpAPI HTTP request to prevent key leaking in tracebacks
+- Added notification deduplication — threshold alerts now track per-service level and only fire on level change
+- Replaced hardcoded `~/AI/LLM` path in Claude Code launcher with configurable `claudeWorkDir` KConfig entry
+- Removed dead code: stale config watchers for deleted API key properties
+- Darkened pill badge background colors by 40% via `Qt.darker()` for improved contrast
+
 ### v1.0.0 (2026-02-12)
 
 - Initial release

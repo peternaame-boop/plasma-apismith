@@ -88,7 +88,16 @@ Item {
                         x: labelZone.width
                         width: valueText.implicitWidth + Kirigami.Units.smallSpacing * 3
                         height: parent.height
-                        color: statusColors.forLevel(root.usageStatus(pill.worstPct))
+                        color: {
+                            var level = root.usageStatus(pill.worstPct)
+                            if (level === "ok" || level === "good" || level === "green")
+                                return "#123F1C"
+                            if (level === "warn" || level === "warning" || level === "orange")
+                                return "#2A1A0D"
+                            if (level === "error" || level === "critical" || level === "red")
+                                return "#2A0D0D"
+                            return "#1A1A1A"
+                        }
 
                         Text {
                             id: valueText

@@ -156,7 +156,7 @@ def _http_get(url: str, headers: dict | None = None, timeout: int = 15) -> tuple
 
 
 def _fetch_firecrawl(cfg: dict) -> dict:
-    api_key = cfg.get("api_key") or _keyring_get("firecrawl")
+    api_key = _keyring_get("firecrawl")
     if not api_key:
         return _error_result("firecrawl", "Firecrawl", "No API key configured")
 
@@ -201,7 +201,7 @@ def _fetch_firecrawl(cfg: dict) -> dict:
 
 
 def _fetch_serpapi(cfg: dict) -> dict:
-    api_key = cfg.get("api_key") or _keyring_get("serpapi")
+    api_key = _keyring_get("serpapi")
     if not api_key:
         return _error_result("serpapi", "SerpAPI", "No API key configured")
 
@@ -212,6 +212,8 @@ def _fetch_serpapi(cfg: dict) -> dict:
         )
     except ConnectionError as e:
         return _error_result("serpapi", "SerpAPI", f"Connection failed: {e}")
+    except Exception:
+        return _error_result("serpapi", "SerpAPI", "Request failed")
 
     if status != 200:
         return _error_result("serpapi", "SerpAPI", f"HTTP {status}")
@@ -627,7 +629,11 @@ class Handler(BaseHTTPRequestHandler):
         global _config
         with _lock:
             _config.update(new_config)
-            config_snapshot = json.dumps(_config, indent=2)
+            # Strip sensitive keys before persisting
+            safe_config = json.loads(json.dumps(_config))
+            for svc in safe_config.get("services", {}).values():
+                svc.pop("api_key", None)
+            config_snapshot = json.dumps(safe_config, indent=2)
 
         # Persist config with restricted permissions
         try:

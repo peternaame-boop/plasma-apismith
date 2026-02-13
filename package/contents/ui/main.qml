@@ -41,6 +41,9 @@ PlasmoidItem {
 
     StatusColors { id: statusColors }
 
+    // Track which services have been notified at which level to prevent spam
+    property var _notifiedState: ({})
+
     // --- Notification ---
     Notification {
         id: notification
@@ -87,14 +90,12 @@ PlasmoidItem {
         if (Plasmoid.configuration.firecrawlEnabled) {
             cfg.services.firecrawl = {
                 enabled: true,
-                api_key: Plasmoid.configuration.firecrawlApiKey,
                 reset_day: Plasmoid.configuration.firecrawlResetDay
             }
         }
         if (Plasmoid.configuration.serpApiEnabled) {
             cfg.services.serpapi = {
                 enabled: true,
-                api_key: Plasmoid.configuration.serpApiKey,
                 reset_day: Plasmoid.configuration.serpApiResetDay
             }
         }
@@ -130,22 +131,36 @@ PlasmoidItem {
         xhr.send()
     }
 
-    // --- Threshold notifications ---
+    // --- Threshold notifications (with dedup) ---
     function checkThresholds() {
         if (!Plasmoid.configuration.notificationsEnabled) return
         for (var i = 0; i < services.length; i++) {
             var svc = services[i]
             if (svc.error) continue
             var pct = svc.percentage
+            var level = ""
             if (pct >= Plasmoid.configuration.criticalThreshold) {
+                level = "critical"
+            } else if (pct >= Plasmoid.configuration.warningThreshold) {
+                level = "warning"
+            }
+            if (!level) {
+                // Below thresholds — reset so we re-notify if it rises again
+                delete _notifiedState[svc.id]
+                continue
+            }
+            // Only notify if level changed (e.g. warning → critical, or first time)
+            if (_notifiedState[svc.id] === level) continue
+            _notifiedState[svc.id] = level
+
+            if (level === "critical") {
                 notification.title = i18n("%1 Critical", svc.name)
                 notification.text = i18n("Usage at %1% - approaching limit!", Math.round(pct))
-                notification.sendEvent()
-            } else if (pct >= Plasmoid.configuration.warningThreshold) {
+            } else {
                 notification.title = i18n("%1 Warning", svc.name)
                 notification.text = i18n("Usage at %1%", Math.round(pct))
-                notification.sendEvent()
             }
+            notification.sendEvent()
         }
     }
 
@@ -165,9 +180,8 @@ PlasmoidItem {
     }
 
     function launchWorkClaude(resume) {
-        var shellCmd = "cd " + shellEscape(Qt.resolvedUrl("").toString().replace("file://", "").replace(/\/package\/.*/, "") || "~/AI/LLM") + " && claude"
-        // Use the home directory directly
-        shellCmd = "cd ~/AI/LLM && claude"
+        var dir = Plasmoid.configuration.claudeWorkDir || "~"
+        var shellCmd = "cd " + shellEscape(dir) + " && claude"
         if (resume) shellCmd += " --resume"
         var fullCmd = "setsid kitty -e bash -c " + shellEscape(shellCmd) + " & #" + Date.now()
         runCommand(fullCmd)
@@ -241,9 +255,7 @@ PlasmoidItem {
     Connections {
         target: Plasmoid.configuration
         function onFirecrawlEnabledChanged() { configPushTimer.restart() }
-        function onFirecrawlApiKeyChanged() { configPushTimer.restart() }
         function onSerpApiEnabledChanged() { configPushTimer.restart() }
-        function onSerpApiKeyChanged() { configPushTimer.restart() }
         function onClaudeWorkEnabledChanged() { configPushTimer.restart() }
         function onClaudePrivateEnabledChanged() { configPushTimer.restart() }
         function onRefreshIntervalChanged() { configPushTimer.restart() }

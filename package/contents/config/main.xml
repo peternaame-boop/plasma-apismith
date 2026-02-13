@@ -25,17 +25,11 @@
         <entry name="firecrawlEnabled" type="Bool">
             <default>true</default>
         </entry>
-        <entry name="firecrawlApiKey" type="String">
-            <default></default>
-        </entry>
         <entry name="firecrawlResetDay" type="Int">
             <default>16</default>
         </entry>
         <entry name="serpApiEnabled" type="Bool">
             <default>true</default>
-        </entry>
-        <entry name="serpApiKey" type="String">
-            <default></default>
         </entry>
         <entry name="serpApiResetDay" type="Int">
             <default>19</default>
@@ -48,6 +42,9 @@
         </entry>
         <entry name="claudeWorkLabel" type="String">
             <default>Work</default>
+        </entry>
+        <entry name="claudeWorkDir" type="String">
+            <default>~</default>
         </entry>
         <entry name="claudePrivateEnabled" type="Bool">
             <default>true</default>

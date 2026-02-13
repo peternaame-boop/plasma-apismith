@@ -7,10 +7,8 @@ KCM.SimpleKCM {
     id: svcConfig
 
     property alias cfg_firecrawlEnabled: fcEnable.checked
-    property alias cfg_firecrawlApiKey: fcKey.text
     property alias cfg_firecrawlResetDay: fcReset.value
     property alias cfg_serpApiEnabled: serpEnable.checked
-    property alias cfg_serpApiKey: serpKey.text
     property alias cfg_serpApiResetDay: serpReset.value
     property alias cfg_claudeWorkEnabled: cwEnable.checked
     property string cfg_claudeWorkBrowser
@@ -34,11 +32,10 @@ KCM.SimpleKCM {
             Kirigami.FormData.label: i18n("Enabled:")
         }
 
-        QQC2.TextField {
-            id: fcKey
+        QQC2.Label {
             Kirigami.FormData.label: i18n("API Key:")
-            echoMode: TextInput.Password
-            placeholderText: i18n("(uses keyring if empty)")
+            text: i18n("Stored securely via system keyring")
+            opacity: 0.6
             enabled: fcEnable.checked
         }
 
@@ -60,11 +57,10 @@ KCM.SimpleKCM {
             Kirigami.FormData.label: i18n("Enabled:")
         }
 
-        QQC2.TextField {
-            id: serpKey
+        QQC2.Label {
             Kirigami.FormData.label: i18n("API Key:")
-            echoMode: TextInput.Password
-            placeholderText: i18n("(uses keyring if empty)")
+            text: i18n("Stored securely via system keyring")
+            opacity: 0.6
             enabled: serpEnable.checked
         }
 
